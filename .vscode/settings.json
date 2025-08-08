@@ -1,0 +1,7 @@
+{
+    "rust-analyzer.checkOnSave": true,
+    "rust-analyzer.cargo.features": "all",
+    "rust-analyzer.procMacro.enable": false,
+    "rust-analyzer.server.path": ".devbox/nix/profile/default/bin/rust-analyzer",
+    "editor.formatOnSave": true
+}

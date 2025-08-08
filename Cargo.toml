@@ -1,0 +1,7 @@
+[package]
+name = "pong_term"
+version = "0.1.0"
+edition = "2021"
+description = "Terminal-based Pong (Stage 1: static screen), no external deps"
+
+[dependencies]

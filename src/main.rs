@@ -1,12 +1,15 @@
-use pong_term::{render_and_print, Board};
+use pong_term::{print_setup_instructions, render_with_message_and_print, Board, HEIGHT, WIDTH};
 
 fn main() -> std::io::Result<()> {
-    // Stage 1: static board, single frame
-    let board = Board::new_static();
-    render_and_print(&board)?;
+    // Print setup instructions
+    print_setup_instructions(WIDTH, HEIGHT)?;
 
-    // Simple pause so the frame can be viewed.
-    println!("\nPress Enter to exit...");
+    // Stage 2: static board, single frame with enhanced visuals
+    // Display the board with the exit message inside it
+    let board = Board::new_static();
+    render_with_message_and_print(&board, "Press Enter to exit...")?;
+
+    // Wait for user to press Enter without printing anything
     let mut buf = String::new();
     let _ = std::io::stdin().read_line(&mut buf);
     Ok(())

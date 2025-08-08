@@ -4,6 +4,7 @@
 use crate::framebuffer::FrameBuffer;
 use crate::model::{Ball, Board, Paddle};
 use crate::terminal::RenderStyle;
+use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
 
 /// Draw the outer border using style-specific characters.
 pub fn draw_border(fb: &mut FrameBuffer, style: &RenderStyle) {
@@ -73,19 +74,31 @@ pub fn draw_ball(fb: &mut FrameBuffer, b: &Ball, style: &RenderStyle) {
     }
 }
 
-/// Draw text centered at a specific row
+/// Draw text centered at a specific row (accounts for Unicode display width)
 pub fn draw_centered_text(fb: &mut FrameBuffer, text: &str, row: usize) {
     let w = fb.width();
-    let text_len = text.len();
+    if w < 3 {
+        return; // need at least 1 column interior
+    }
+    let inner_w = w.saturating_sub(2);
 
-    if text_len >= w - 2 {
-        return; // text too long
+    // Use display column width for proper centering with Unicode chars (e.g., arrows, ×)
+    let text_cols = UnicodeWidthStr::width(text);
+    if text_cols == 0 || text_cols > inner_w {
+        return; // empty or too wide to fit inside the border
     }
 
-    let start_x = (w - text_len) / 2;
+    // Center within the interior (exclude the left/right borders)
+    let mut x = 1 + (inner_w - text_cols) / 2;
 
-    for (i, ch) in text.chars().enumerate() {
-        fb.set(start_x + i, row, ch);
+    for ch in text.chars() {
+        // Advance by the display width of each character
+        let cw = UnicodeWidthChar::width(ch).unwrap_or(1);
+        if x + cw > w - 1 {
+            break; // don't overwrite the right border
+        }
+        fb.set(x, row, ch);
+        x += cw;
     }
 }
 

@@ -5,3 +5,4 @@ edition = "2021"
 description = "Terminal based, networked, Pong made with ❤️ in Rust."
 
 [dependencies]
+unicode-width = "0.1"

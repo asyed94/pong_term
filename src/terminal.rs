@@ -50,8 +50,8 @@ pub fn print_setup_instructions(required_width: usize, required_height: usize) -
     writeln!(stdout, "Press Enter when ready to continue...")?;
     stdout.flush()?;
 
-    let mut input = String::new();
-    io::stdin().read_line(&mut input)?;
+    // Wait for Enter without echoing typed characters
+    crate::input::wait_for_enter_no_echo()?;
     Ok(())
 }
 
@@ -99,6 +99,10 @@ impl RenderStyle {
 
     /// Auto-detect best style based on terminal capabilities.
     pub fn auto() -> Self {
+        // Allow forcing ASCII to avoid font/terminal artifacts with block glyphs
+        if std::env::var("PONG_FORCE_ASCII").is_ok() {
+            return Self::ascii();
+        }
         if supports_unicode() {
             Self::unicode()
         } else {

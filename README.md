@@ -2,7 +2,7 @@
 
 A production-ready terminal-based multiplayer Pong game written in pure Rust with **zero external dependencies**.
 
-![Version](https://img.shields.io/badge/version-0.4.0-blue)
+![Version](https://img.shields.io/badge/version-0.4.1-blue)
 ![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=flat&logo=rust&logoColor=white)
 ![Lines of Code](https://img.shields.io/badge/lines%20of%20code-2000%2B-brightgreen)
 ![Dependencies](https://img.shields.io/badge/dependencies-0-green)
@@ -421,12 +421,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📌 Version History
 
-| Version   | Stage | Description           | Release Date |
-| --------- | ----- | --------------------- | ------------ |
-| **0.4.0** | 4     | Advanced Ball Physics | Current      |
-| 0.3.0     | 3     | Interactive Gameplay  | -            |
-| 0.2.0     | 2     | Rendering System      | -            |
-| 0.1.0     | 1     | Foundation            | -            |
+| Version   | Stage | Description                    | Release Date |
+| --------- | ----- | ------------------------------ | ------------ |
+| **0.4.1** | 4     | Advanced Ball Physics (0 deps) | Current      |
+| 0.4.0     | 4     | Advanced Ball Physics          | -            |
+| 0.3.0     | 3     | Interactive Gameplay           | -            |
+| 0.2.0     | 2     | Rendering System               | -            |
+| 0.1.0     | 1     | Foundation                     | -            |
 
 ### Semantic Versioning
 
@@ -477,9 +478,10 @@ When a stage is completed:
 
 ---
 
-**Current Version**: `0.4.0`  
+**Current Version**: `0.4.1`  
 **Current Stage**: Stage 4 Complete ✅  
 **Ball Physics**: Advanced 5-zone paddle system with speed control  
+**Zero Dependencies**: True zero-dependency implementation achieved ✅  
 **Next Up**: Stage 5 - Score tracking and game state management
 
 ---

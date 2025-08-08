@@ -4,7 +4,7 @@
 use crate::framebuffer::FrameBuffer;
 use crate::model::{Ball, Board, Paddle};
 use crate::terminal::RenderStyle;
-use unicode_width::{UnicodeWidthChar, UnicodeWidthStr};
+use crate::util::{char_width, str_width};
 
 /// Draw the outer border using style-specific characters.
 pub fn draw_border(fb: &mut FrameBuffer, style: &RenderStyle) {
@@ -83,7 +83,7 @@ pub fn draw_centered_text(fb: &mut FrameBuffer, text: &str, row: usize) {
     let inner_w = w.saturating_sub(2);
 
     // Use display column width for proper centering with Unicode chars (e.g., arrows, ×)
-    let text_cols = UnicodeWidthStr::width(text);
+    let text_cols = str_width(text);
     if text_cols == 0 || text_cols > inner_w {
         return; // empty or too wide to fit inside the border
     }
@@ -93,7 +93,7 @@ pub fn draw_centered_text(fb: &mut FrameBuffer, text: &str, row: usize) {
 
     for ch in text.chars() {
         // Advance by the display width of each character
-        let cw = UnicodeWidthChar::width(ch).unwrap_or(1);
+        let cw = char_width(ch);
         if x + cw > w - 1 {
             break; // don't overwrite the right border
         }

@@ -1,9 +1,9 @@
 [package]
 name = "pong_term"
-version = "0.4.0"
+version = "0.4.1"
 edition = "2021"
 authors = ["Aamir Syed"]
-description = "Terminal-based Pong game with zero dependencies - Stage 4: Advanced Ball Physics"
+description = "Terminal-based Pong game with TRULY zero dependencies - Stage 4: Advanced Ball Physics"
 repository = "https://github.com/asyed94/battle-of-the-rustaceans"
 license = "MIT"
 keywords = ["game", "terminal", "pong", "rust", "zero-dependencies"]

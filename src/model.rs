@@ -260,6 +260,7 @@ impl Board {
     }
 
     /// Check if ball collides with either paddle.
+    #[cfg(test)]
     fn check_paddle_collision(&self) -> bool {
         // Left paddle collision
         if self.ball.x == self.left.x {
@@ -443,7 +444,7 @@ mod tests {
 
     #[test]
     fn test_paddle_angle_variation() {
-        let board = Board::new_static();
+        let _board = Board::new_static();
 
         // Test each position on a paddle at y=10 (positions 10-14)
         let mut test_board = Board::new_static();
@@ -493,7 +494,7 @@ mod tests {
         assert_eq!(board.frame_counter, 1);
 
         // Second frame - ball should move
-        let event = board.update_ball();
+        let _event = board.update_ball();
         assert_eq!(board.ball.x, 11); // Ball moved
         assert_eq!(board.frame_counter, 2);
     }

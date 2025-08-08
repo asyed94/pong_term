@@ -8,6 +8,7 @@
 //! - terminal: terminal utilities and capability detection
 //! - input: raw mode terminal input handling
 //! - game_loop: main game loop with fixed frame rate
+//! - util: utility functions (char/string width calculations)
 
 pub mod draw;
 pub mod framebuffer;
@@ -16,6 +17,7 @@ pub mod input;
 pub mod model;
 pub mod render;
 pub mod terminal;
+pub mod util;
 
 pub use draw::draw_board_with_message;
 pub use framebuffer::FrameBuffer;

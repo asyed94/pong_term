@@ -5,7 +5,7 @@ use crate::draw::{draw_board, draw_board_with_message};
 use crate::framebuffer::FrameBuffer;
 use crate::model::Board;
 use crate::terminal::RenderStyle;
-use unicode_width::UnicodeWidthStr;
+use crate::util::str_width;
 
 const ANSI_CLEAR: &str = "\x1b[2J";
 const ANSI_HOME: &str = "\x1b[H";
@@ -164,10 +164,7 @@ pub fn render_pause_menu(board: &Board) -> std::io::Result<()> {
         .collect();
 
     // Compute display width of each line and overall width
-    let line_widths: Vec<usize> = menu_lines
-        .iter()
-        .map(|l| UnicodeWidthStr::width(l.as_str()))
-        .collect();
+    let line_widths: Vec<usize> = menu_lines.iter().map(|l| str_width(l.as_str())).collect();
     let menu_height = menu_lines.len();
     let menu_width = line_widths.iter().copied().max().unwrap_or(0);
 

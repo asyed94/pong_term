@@ -2,7 +2,7 @@
 //! Stage 4: Added ball physics updates.
 
 use crate::input::{poll_input, InputEvent, Terminal};
-use crate::model::{BallEvent, Board};
+use crate::model::Board;
 use crate::render::{render_pause_menu, render_synchronized, show_cursor};
 use std::io;
 use std::thread;

@@ -1,8 +1,8 @@
 //! Game loop: input → update → render at fixed frame rate.
-//! Stage 3: Basic game loop with paddle movement only.
+//! Stage 4: Added ball physics updates.
 
 use crate::input::{poll_input, InputEvent, Terminal};
-use crate::model::Board;
+use crate::model::{BallEvent, Board};
 use crate::render::{render_pause_menu, render_synchronized, show_cursor};
 use std::io;
 use std::thread;
@@ -25,8 +25,8 @@ pub fn run_game_loop() -> io::Result<()> {
     // Initialize terminal in raw mode
     let _terminal = Terminal::enter_raw_mode()?;
 
-    // Initialize game board
-    let mut board = Board::new_static();
+    // Initialize game board with moving ball
+    let mut board = Board::new_game();
     let mut state = GameState::Paused;
     let mut last_render_state = GameState::Running;
     let mut last_rendered_board = board.clone(); // Track last rendered board for conditional rendering
@@ -44,8 +44,11 @@ pub fn run_game_loop() -> io::Result<()> {
         let input = poll_input()?;
         handle_input(input, &mut board, &mut state);
 
-        // Update phase (currently just processes input results)
-        // In Stage 4, this will include ball physics
+        // Update phase - ball physics when game is running
+        if state == GameState::Running {
+            let _ball_event = board.update_ball();
+            // We can use ball_event later for sounds/effects
+        }
 
         // Render phase - only render when something actually changed
         match state {

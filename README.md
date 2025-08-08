@@ -1,257 +1,408 @@
-# Terminal Pong
+# 🏓 Terminal Pong
 
-A production-ready terminal-based multiplayer Pong game written in pure Rust with zero external dependencies.
+A production-ready terminal-based multiplayer Pong game written in pure Rust with **zero external dependencies**.
 
-## Features
+![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=flat&logo=rust&logoColor=white)
+![Lines of Code](https://img.shields.io/badge/lines%20of%20code-2000%2B-blue)
+![Dependencies](https://img.shields.io/badge/dependencies-0-green)
 
-### Current Implementation (Stage 3)
+## 🎮 Game Features
 
-- ✅ **Stage 1**: Basic project structure with model and simple rendering
-- ✅ **Stage 2**: Framebuffer abstraction for efficient rendering
-- ✅ **Stage 3**: Interactive gameplay with paddle movement
-  - Raw mode terminal input (W/S, ↑/↓ keys)
-  - Game loop with **60 FPS** frame rate
-  - **Conditional rendering** (only updates when state changes)
-  - Synchronized output for flicker-free rendering
-  - Pause functionality (Space key)
-  - Paddle movement with boundary constraints
-  - Input buffer draining to prevent scroll wheel interference
+### ✅ Current Implementation (Stage 4: Advanced Ball Physics)
 
-### Planned Features
+<details>
+<summary><b>Stage 1: Foundation</b> ✅</summary>
 
-- **Stage 4**: Ball physics and collision detection
-- **Stage 5**: Game state and scoring
-- **Stage 6**: Local multiplayer (same terminal)
-- **Stage 7**: Network multiplayer support
-- **Stage 8**: Server implementation for online play
-- **Stage 9**: Polish and optimizations
+- Basic project structure with clean architecture
+- Game model with Board, Paddle, and Ball entities
+- Simple ASCII rendering system
+- Static display capabilities
+</details>
 
-## Quick Start
+<details>
+<summary><b>Stage 2: Rendering System</b> ✅</summary>
 
-### Requirements
+- **FrameBuffer abstraction** for efficient rendering
+- Separation of drawing and rendering logic
+- **Unicode detection** with automatic fallback
+- Terminal setup instructions and validation
+</details>
 
-- Rust 1.70+ (2021 edition)
-- Terminal with ANSI escape code support
-- 80×24 character terminal minimum
+<details>
+<summary><b>Stage 3: Interactive Gameplay</b> ✅</summary>
 
-### Running the Game
+- **Raw mode terminal input** without external dependencies
+- Direct syscall implementation for termios control
+- **60 FPS game loop** with frame limiting
+- **Conditional rendering** (only updates when state changes)
+- **Synchronized output** for flicker-free display
+- Paddle movement with boundary constraints
+- Pause/resume functionality
+- Input buffer draining to prevent scroll interference
+</details>
+
+<details open>
+<summary><b>Stage 4: Advanced Ball Physics</b> ✅</summary>
+
+#### 🎯 Physics System
+
+- **Smart Speed Control**
+  - Ball moves every 2 frames (30 effective FPS)
+  - Angled shots move slightly faster for realism
+- **5-Zone Paddle System**
+
+  ```
+  Paddle Zones:
+  ┌─────┐
+  │  1  │ ← Top Edge: Strong upward deflection
+  │  2  │ ← Top Mid: Moderate upward angle
+  │  3  │ ← Center: Straight horizontal shot
+  │  4  │ ← Bottom Mid: Moderate downward angle
+  │  5  │ ← Bottom Edge: Strong downward deflection
+  └─────┘
+  ```
+
+- **Collision Detection**
+  - Wall bouncing with vertical velocity reversal
+  - Paddle collision with zone-based angle calculation
+  - Goal detection with automatic ball reset
+- **Frame-based Animation**
+  - Predictable, smooth ball movement
+  - Frame counter for precise speed control
+  </details>
+
+### 📋 Planned Features
+
+| Stage | Feature           | Description                                    |
+| ----- | ----------------- | ---------------------------------------------- |
+| **5** | Score System      | Score tracking, display, and win conditions    |
+| **6** | Local Multiplayer | Two players on same terminal                   |
+| **7** | Network Support   | TCP/UDP networking for remote play             |
+| **8** | Game Server       | Dedicated server for matchmaking               |
+| **9** | Polish            | Sound effects, animations, and UI improvements |
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Rust**: 1.70+ (2021 edition)
+- **Terminal**: ANSI escape code support
+- **Size**: Minimum 80×24 characters
+- **OS**: Linux x86_64
+
+### Installation & Running
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/asyed94/battle-of-the-rustaceans.git
 cd pong_term
 
 # Run the game
 cargo run
 
+# Run in release mode (optimized)
+cargo build --release
+./target/release/pong_term
+
 # Run tests
 cargo test
 
-# Build for release
-cargo build --release
+# Run specific test suite
+cargo test model::tests
 ```
 
-### Controls
+### 🎮 Game Controls
 
-| Key   | Action                    |
-| ----- | ------------------------- |
-| W/S   | Move left paddle up/down  |
-| ↑/↓   | Move right paddle up/down |
-| Space | Pause/unpause game        |
-| Q     | Quit game                 |
+| Key     | Player | Action            |
+| ------- | ------ | ----------------- |
+| `W`     | Left   | Move paddle up    |
+| `S`     | Left   | Move paddle down  |
+| `↑`     | Right  | Move paddle up    |
+| `↓`     | Right  | Move paddle down  |
+| `Space` | Both   | Pause/Resume game |
+| `Enter` | Both   | Start game        |
+| `Q`     | Both   | Quit to menu      |
 
-## Architecture
+## 🏗️ Architecture
 
-The game follows a modular architecture with clear separation of concerns:
+### System Overview
 
 ```
 ┌─────────────────────────────────────────┐
-│              Main Entry                 │
-│         (Setup & Game Loop)             │
+│           Main Entry Point              │
+│         Terminal Setup & Loop           │
 └─────────────┬───────────────────────────┘
               │
               ▼
 ┌─────────────────────────────────────────┐
-│           Game Loop (60 FPS)            │
-│    ┌──────────┬──────────┬──────────┐   │
-│    │  Input   │  Update  │  Render  │   │
-│    │          │          │(Conditio-|   │
-|    |          |          |   nal)   |   |
-│    └──────────┴──────────┴──────────┘   │
+│        Game Loop (60 FPS)               │
+│  ┌──────────┬──────────┬──────────┐     │
+│  │  Input   │  Update  │  Render  │     │
+│  │  Events  │  Physics │  Display │     │
+│  └──────────┴──────────┴──────────┘     │
 └─────────────────────────────────────────┘
               │
     ┌─────────┼─────────┬──────────┐
     ▼         ▼         ▼          ▼
-┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐
-│ Input  │ │ Model  │ │ Frame  │ │Render  │
-│        │ │        │ │ Buffer │ │        │
-│ • Raw  │ │• Board │ │        │ │• ANSI  │
-│  mode  │ │• Paddle│ │• 2D    │ │• Sync  │
-│• Events│ │• Ball  │ │ grid   │ │ output │
-└────────┘ └────────┘ └────────┘ └────────┘
+┌────────┐ ┌─────────┐ ┌────────┐ ┌────────┐
+│ Input  │ │ Model   │ │ Frame  │ │Render  │
+│ Module │ │ Module  │ │ Buffer │ │ Module │
+├────────┤ ├─────────┤ ├────────┤ ├────────┤
+│• Raw   │ │• Board  │ │• 2D    │ │• ANSI  │
+│  mode  │ │• Paddle │ │  grid  │ │  codes │
+│• Event │ │• Ball   │ │• Clear │ │• Sync  │
+│  queue │ │• Physics│ │• Draw  │ │  output│
+└────────┘ └─────────┘ └────────┘ └────────┘
 ```
 
 ### Module Structure
 
-- **`src/model.rs`**: Game data structures (Board, Paddle, Ball)
-- **`src/framebuffer.rs`**: 2D character buffer for frame composition
-- **`src/draw.rs`**: Pure drawing functions (model → framebuffer)
-- **`src/render.rs`**: ANSI terminal output with synchronized updates
-- **`src/terminal.rs`**: Terminal utilities and capability detection
-- **`src/input.rs`**: Raw mode terminal input handling
-- **`src/game_loop.rs`**: Main game loop with fixed frame rate
-- **`src/main.rs`**: Entry point and setup
+| Module          | File                 | Purpose                                    |
+| --------------- | -------------------- | ------------------------------------------ |
+| **Model**       | `src/model.rs`       | Game state, physics, collision detection   |
+| **FrameBuffer** | `src/framebuffer.rs` | 2D character grid for rendering            |
+| **Draw**        | `src/draw.rs`        | Pure functions: model → framebuffer        |
+| **Render**      | `src/render.rs`      | ANSI terminal output, synchronized updates |
+| **Terminal**    | `src/terminal.rs`    | Terminal setup, capability detection       |
+| **Input**       | `src/input.rs`       | Raw mode input, event handling             |
+| **Game Loop**   | `src/game_loop.rs`   | Fixed timestep loop, frame limiting        |
+| **Main**        | `src/main.rs`        | Entry point, initialization                |
 
-## Data Model
+## 📊 Data Model
 
-### Board
+### Core Entities
 
-- Fixed size: 80×24 characters
-- Contains left paddle, right paddle, and ball
-- Handles paddle movement with boundary checking
+#### Board
 
-### Paddle
+```rust
+pub struct Board {
+    width: 80,              // Fixed width
+    height: 24,             // Fixed height
+    left: Paddle,           // Left player paddle
+    right: Paddle,          // Right player paddle
+    ball: Ball,             // Game ball
+    frame_counter: usize,   // For physics timing
+}
+```
 
-- Position (x, y)
-- Height: 5 characters
-- Movement speed: 1 cell per frame
+#### Paddle
 
-### Ball
+```rust
+pub struct Paddle {
+    x: usize,               // Horizontal position (fixed)
+    y: usize,               // Vertical position (movable)
+    height: 5,              // Paddle spans 5 cells
+}
+```
 
-- Position (x, y)
-- Velocity (dx, dy) - prepared for Stage 4
+#### Ball
 
-### FrameBuffer
+```rust
+pub struct Ball {
+    x: usize,               // Current X position
+    y: usize,               // Current Y position
+    dx: i8,                 // Velocity X (-1, 0, 1)
+    dy: i8,                 // Velocity Y (-1, 0, 1)
+}
+```
 
-- 2D grid of characters
-- Efficient batch rendering
-- Clear separation between game logic and rendering
+### Physics Constants
 
-## Terminal Rendering
+| Constant             | Value        | Description               |
+| -------------------- | ------------ | ------------------------- |
+| `PADDLE_SPEED`       | 1 cell/frame | Paddle movement speed     |
+| `BALL_SPEED_DIVISOR` | 2            | Ball moves every N frames |
+| `PADDLE_HEIGHT`      | 5 cells      | Height of each paddle     |
+| `BOARD_WIDTH`        | 80 cells     | Fixed board width         |
+| `BOARD_HEIGHT`       | 24 cells     | Fixed board height        |
 
-### Synchronized Output
+## 🖥️ Terminal Rendering
 
-The game uses ANSI escape sequences for synchronized output to prevent screen tearing:
+### Display Characters
 
-- `\x1b[?2026h` - Begin synchronized update
-- `\x1b[?2026l` - End synchronized update
+#### Unicode Mode (Auto-detected)
 
-### Unicode Support
+```
+┌──────────────┐
+│              │  Borders: ┌─┐│└┘
+│█            █│  Paddles: █
+│█     ●      █│  Ball: ●
+│█            █│
+└──────────────┘
+```
 
-Automatically detects terminal Unicode support via environment variables:
+#### ASCII Fallback
 
-- Unicode mode: Box-drawing characters (┌─┐│└┘), block paddles (█), filled ball (●)
-- ASCII fallback: Simple characters (+-|), basic paddles (|), simple ball (o)
+```
++----------+
+|          |  Borders: +-|
+||        ||  Paddles: |
+||    o   ||  Ball: o
+||        ||
++----------+
+```
 
-## Development
+### Synchronized Rendering
 
-### Building from Source
+The game prevents screen tearing using ANSI escape sequences:
 
 ```bash
-# Debug build (with debug symbols)
-cargo build
-
-# Release build (optimized)
-cargo build --release
-
-# Run tests
-cargo test
-
-# Run with verbose output
-RUST_BACKTRACE=1 cargo run
+\x1b[?2026h  # Begin synchronized update
+# ... render frame ...
+\x1b[?2026l  # End synchronized update
 ```
+
+## 🧪 Testing
+
+### Test Coverage
+
+```bash
+# Run all tests with coverage info
+cargo test -- --nocapture
+
+# Run specific test modules
+cargo test model::tests        # Physics tests
+cargo test framebuffer::tests  # Rendering tests
+cargo test input::tests        # Input handling tests
+
+# Run with backtrace for debugging
+RUST_BACKTRACE=1 cargo test
+```
+
+### Test Categories
+
+- **Unit Tests**: Each module has comprehensive unit tests
+- **Physics Tests**: Ball movement, collision detection, paddle zones
+- **Rendering Tests**: Frame buffer operations, boundary checks
+- **Input Tests**: Key event processing, raw mode handling
+
+## ⚡ Performance
+
+| Metric             | Value                | Description               |
+| ------------------ | -------------------- | ------------------------- |
+| **Frame Rate**     | 60 FPS               | Fixed timestep game loop  |
+| **Input Latency**  | <16ms                | Sub-frame response time   |
+| **Rendering Mode** | Conditional          | 0 FPS idle, 60 FPS active |
+| **Memory Usage**   | ~1MB                 | Minimal heap allocation   |
+| **CPU Usage**      | <1% idle, <2% active | Efficient game loop       |
+
+## 🔧 Development
 
 ### Project Structure
 
 ```
 pong_term/
-├── Cargo.toml          # Project manifest
-├── README.md           # This file
-├── src/
-│   ├── main.rs         # Entry point
-│   ├── lib.rs          # Library root
-│   ├── model.rs        # Game data structures
-│   ├── framebuffer.rs  # 2D rendering buffer
-│   ├── draw.rs         # Drawing functions
-│   ├── render.rs       # Terminal rendering
-│   ├── terminal.rs     # Terminal utilities
-│   ├── input.rs        # Input handling
-│   └── game_loop.rs    # Game loop implementation
-└── target/             # Build artifacts
+├── 📄 Cargo.toml         # Project manifest
+├── 📄 Cargo.lock         # Dependency lock file
+├── 📄 README.md          # This file
+├── 📄 LICENSE            # MIT License
+├── 📁 src/
+│   ├── 📄 main.rs        # Entry point
+│   ├── 📄 lib.rs         # Library root
+│   ├── 📄 model.rs       # Game logic & physics
+│   ├── 📄 framebuffer.rs # Rendering buffer
+│   ├── 📄 draw.rs        # Drawing functions
+│   ├── 📄 render.rs      # Terminal output
+│   ├── 📄 terminal.rs    # Terminal utilities
+│   ├── 📄 input.rs       # Input handling
+│   └── 📄 game_loop.rs   # Main game loop
+├── 📁 target/            # Build artifacts
+└── 📁 tests/             # Integration tests
 ```
 
-### Testing
-
-Each module includes comprehensive unit tests:
+### Building from Source
 
 ```bash
-# Run all tests
-cargo test
+# Development build
+cargo build
 
-# Run tests with output
-cargo test -- --nocapture
+# Release build (optimized)
+cargo build --release
 
-# Run specific test
-cargo test test_name
+# Check for errors without building
+cargo check
+
+# Format code
+cargo fmt
+
+# Run linter
+cargo clippy
 ```
 
-## Implementation Details
+## 🚫 Zero Dependencies Philosophy
 
-### Stage 1: Foundation (Complete)
+This project is built with **absolutely zero external dependencies**:
 
-- Basic project structure
-- Game model with Board, Paddle, Ball
-- Simple ASCII rendering
-- Static display
+- ✅ **No game engines** - Pure Rust implementation
+- ✅ **No terminal libraries** - Direct ANSI escape codes
+- ✅ **No async runtime** - Synchronous game loop
+- ✅ **No external crates** - Standard library only
 
-### Stage 2: Rendering System (Complete)
+### Implementation Techniques
 
-- FrameBuffer abstraction for efficient rendering
-- Separation of drawing and rendering logic
-- Unicode detection and enhanced visuals
-- Terminal setup instructions
+- **Terminal Control**: Direct syscalls via inline assembly
+- **Input Handling**: Raw mode using termios ioctls
+- **Rendering**: ANSI escape sequences
+- **Timing**: Standard library's `Instant` and `Duration`
 
-### Stage 3: Input & Game Loop (Complete)
+## 🖥️ System Requirements
 
-- Raw mode terminal input without external dependencies
-- Direct syscall implementation for termios
-- Non-blocking keyboard input with buffer draining
-- Fixed 60 FPS game loop
-- Conditional rendering (only renders on state changes)
-- Paddle movement with constraints
-- Pause functionality
-- Synchronized output for smooth rendering
+### Minimum Requirements
 
-### No External Dependencies
+- **OS**: Linux x86_64
+- **Terminal**: Any terminal with ANSI support
+- **Screen Size**: 80×24 characters minimum
+- **Rust**: 1.70+ (2021 edition)
 
-This project uses **zero external crates**. All functionality is implemented using:
+### Tested Terminals
 
-- Rust standard library
-- Direct system calls for terminal control (x86_64 Linux)
-- ANSI escape sequences for rendering
+- ✅ GNOME Terminal
+- ✅ Konsole
+- ✅ Alacritty
+- ✅ Kitty
+- ✅ xterm
+- ✅ VS Code Terminal
 
-## Performance
+## 🤝 Contributing
 
-- **Frame Rate**: Fixed 60 FPS
-- **Input Latency**: < 1 frame (16ms)
-- **Rendering**: Conditional (0 FPS when idle, 60 FPS when active)
-- **Memory Usage**: Minimal (~1MB)
-- **CPU Usage**: < 1% when idle, < 2% when active
+Contributions are welcome! This project follows a staged development approach:
 
-## Compatibility
+1. **Fork** the repository
+2. **Create** a feature branch
+3. **Implement** your changes with tests
+4. **Ensure** all tests pass
+5. **Submit** a pull request
 
-- **OS**: Linux (x86_64)
-- **Terminal**: Any terminal with ANSI escape code support
-- **Minimum Size**: 80×24 characters
+### Development Guidelines
 
-## Contributing
+- Maintain zero external dependencies
+- Write comprehensive tests for new features
+- Follow Rust naming conventions
+- Document public APIs
+- Keep commits atomic and descriptive
 
-This project follows a staged development approach. Each stage builds upon the previous one with clear, testable milestones.
+## 📄 License
 
-## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-MIT License - See LICENSE file for details
+## 🎯 Roadmap
+
+- [x] **Stage 1**: Basic structure and rendering
+- [x] **Stage 2**: Framebuffer system
+- [x] **Stage 3**: Input and game loop
+- [x] **Stage 4**: Ball physics with paddle zones
+- [ ] **Stage 5**: Score tracking and display
+- [ ] **Stage 6**: Local multiplayer
+- [ ] **Stage 7**: Network protocol
+- [ ] **Stage 8**: Game server
+- [ ] **Stage 9**: Polish and optimization
 
 ---
 
-_Stage 3 Complete: Interactive gameplay with 60 FPS and conditional rendering_
+**Current Status**: Stage 4 Complete ✅
+**Ball Physics**: Advanced 5-zone paddle system with speed control
+**Next Up**: Score tracking and game state management
+
+---
+
+_Built with ❤️ in Rust | Zero Dependencies | Pure Terminal Graphics_

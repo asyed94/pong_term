@@ -21,7 +21,7 @@ pub use draw::draw_board_with_message;
 pub use framebuffer::FrameBuffer;
 pub use game_loop::run_game_loop;
 pub use input::{wait_for_enter_no_echo, InputEvent, Terminal};
-pub use model::{Ball, Board, Paddle, HEIGHT, PADDLE_HEIGHT, WIDTH};
+pub use model::{Ball, BallEvent, Board, Paddle, HEIGHT, PADDLE_HEIGHT, WIDTH};
 pub use render::{
     enter_alternate_screen, exit_alternate_screen, render_and_print, render_synchronized,
     render_to_string, render_with_message_and_print, render_with_message_to_string, show_cursor,

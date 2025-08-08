@@ -2,9 +2,11 @@
 
 A production-ready terminal-based multiplayer Pong game written in pure Rust with **zero external dependencies**.
 
+![Version](https://img.shields.io/badge/version-0.4.0-blue)
 ![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=flat&logo=rust&logoColor=white)
-![Lines of Code](https://img.shields.io/badge/lines%20of%20code-2000%2B-blue)
+![Lines of Code](https://img.shields.io/badge/lines%20of%20code-2000%2B-brightgreen)
 ![Dependencies](https://img.shields.io/badge/dependencies-0-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## 🎮 Game Features
 
@@ -81,6 +83,26 @@ A production-ready terminal-based multiplayer Pong game written in pure Rust wit
 | **8** | Game Server       | Dedicated server for matchmaking               |
 | **9** | Polish            | Sound effects, animations, and UI improvements |
 
+## 📦 Installation
+
+### Download Pre-built Binaries
+
+Download the latest release from the [Releases](https://github.com/asyed94/battle-of-the-rustaceans/releases) page.
+
+| Platform | Architecture  | Binary                         |
+| -------- | ------------- | ------------------------------ |
+| Linux    | x86_64        | `pong_term-linux-x86_64`       |
+| Linux    | ARM64         | `pong_term-linux-aarch64`      |
+| macOS    | Intel         | `pong_term-macos-x86_64`       |
+| macOS    | Apple Silicon | `pong_term-macos-aarch64`      |
+| Windows  | x86_64        | `pong_term-windows-x86_64.exe` |
+
+```bash
+# Make binary executable (Linux/macOS)
+chmod +x pong_term-*
+./pong_term-*
+```
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -94,7 +116,7 @@ A production-ready terminal-based multiplayer Pong game written in pure Rust wit
 
 ```bash
 # Clone the repository
-git clone https://github.com/asyed94/battle-of-the-rustaceans.git
+git clone https://github.com/asyed94/pong_term.git
 cd pong_term
 
 # Run the game
@@ -397,11 +419,68 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] **Stage 8**: Game server
 - [ ] **Stage 9**: Polish and optimization
 
+## 📌 Version History
+
+| Version   | Stage | Description           | Release Date |
+| --------- | ----- | --------------------- | ------------ |
+| **0.4.0** | 4     | Advanced Ball Physics | Current      |
+| 0.3.0     | 3     | Interactive Gameplay  | -            |
+| 0.2.0     | 2     | Rendering System      | -            |
+| 0.1.0     | 1     | Foundation            | -            |
+
+### Semantic Versioning
+
+This project follows [Semantic Versioning](https://semver.org/):
+
+- **MAJOR**: Breaking changes or complete rewrite
+- **MINOR**: Stage completion (0.X.0 where X = stage number)
+- **PATCH**: Bug fixes and improvements within a stage
+
+## 🚢 CI/CD Pipeline
+
+### Continuous Integration (CI)
+
+All pull requests and pushes to main branches trigger comprehensive automated testing:
+
+#### 🧪 Test Suite
+
+- **Formatting Check** - Ensures consistent code style
+- **Clippy Linting** - Catches common mistakes and anti-patterns
+- **Unit Tests** - Runs on Linux, macOS, and Windows
+- **Build Verification** - Ensures compilation on all target platforms
+- **Security Audit** - Checks for known vulnerabilities
+- **Documentation Check** - Validates all documentation builds
+- **Integration Tests** - Smoke tests the actual binary
+- **Code Coverage** - Tracks test coverage (main branch only)
+
+#### ✅ PR Requirements
+
+Before merging, all PRs must pass:
+
+- ✓ Code formatting (`cargo fmt`)
+- ✓ Linting (`cargo clippy`)
+- ✓ All tests on 3 platforms
+- ✓ Builds for 5 target architectures
+- ✓ Security audit
+- ✓ Documentation generation
+
+### Release Process
+
+When a stage is completed:
+
+1. Version is bumped to `0.X.0` (where X = stage number)
+2. Tag is created: `git tag v0.X.0`
+3. GitHub Actions automatically:
+   - Creates a GitHub Release
+   - Builds binaries for all platforms
+   - Uploads binaries to the release
+
 ---
 
-**Current Status**: Stage 4 Complete ✅
-**Ball Physics**: Advanced 5-zone paddle system with speed control
-**Next Up**: Score tracking and game state management
+**Current Version**: `0.4.0`  
+**Current Stage**: Stage 4 Complete ✅  
+**Ball Physics**: Advanced 5-zone paddle system with speed control  
+**Next Up**: Stage 5 - Score tracking and game state management
 
 ---
 

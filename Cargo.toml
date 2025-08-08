@@ -1,8 +1,19 @@
 [package]
 name = "pong_term"
-version = "0.1.0"
+version = "0.4.0"
 edition = "2021"
-description = "Terminal based, networked, Pong made with ❤️ in Rust."
+authors = ["Aamir Syed"]
+description = "Terminal-based Pong game with zero dependencies - Stage 4: Advanced Ball Physics"
+repository = "https://github.com/asyed94/battle-of-the-rustaceans"
+license = "MIT"
+keywords = ["game", "terminal", "pong", "rust", "zero-dependencies"]
+categories = ["games", "command-line-utilities"]
+
+# Semantic Versioning:
+# MAJOR.MINOR.PATCH
+# - MAJOR: Breaking changes or complete rewrite
+# - MINOR: Stage completion (0.1.0 = Stage 1, 0.4.0 = Stage 4, etc.)
+# - PATCH: Bug fixes and minor improvements within a stage
 
 [dependencies]
-unicode-width = "0.1"
+# Zero dependencies - using only Rust standard library

@@ -117,22 +117,22 @@ pub fn render_pause_menu(board: &Board) -> std::io::Result<()> {
     use std::io::{self, Write};
 
     let pause_message = "╔════════════════════════════════════════╗\n\
-                                       ║              GAME PAUSED               ║\n\
-                                       ╠════════════════════════════════════════╣\n\
-                                       ║                                        ║\n\
-                                       ║  Controls:                             ║\n\
-                                       ║    W/S      - Move left paddle         ║\n\
-                                       ║    ↑/↓      - Move right paddle        ║\n\
-                                       ║    Space    - Pause/Resume game        ║\n\
-                                       ║    Q        - Quit to main menu        ║\n\
-                                       ║                                        ║\n\
-                                       ║  Game Info:                            ║\n\
-                                       ║    FPS: 60                             ║\n\
-                                       ║    Board: 80×24                        ║\n\
-                                       ║                                        ║\n\
-                                       ║        Press SPACE to resume           ║\n\
-                                       ║                                        ║\n\
-                                       ╚════════════════════════════════════════╝";
+                         ║              GAME PAUSED               ║\n\
+                         ╠════════════════════════════════════════╣\n\
+                         ║                                        ║\n\
+                         ║  Controls:                             ║\n\
+                         ║    W/S      - Move left paddle         ║\n\
+                         ║    ↑/↓      - Move right paddle        ║\n\
+                         ║    Space    - Pause/Resume game        ║\n\
+                         ║    Q        - Quit to main menu        ║\n\
+                         ║                                        ║\n\
+                         ║  Game Info:                            ║\n\
+                         ║    FPS: 60                             ║\n\
+                         ║    Board: 80×24                        ║\n\
+                         ║                                        ║\n\
+                         ║        Press SPACE to resume           ║\n\
+                         ║                                        ║\n\
+                         ╚════════════════════════════════════════╝";
 
     let style = RenderStyle::auto();
     let mut fb = FrameBuffer::new(board.width, board.height, ' ');

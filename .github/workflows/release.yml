@@ -1,0 +1,243 @@
+name: Release
+
+# Trigger on tags that match semantic versioning for minor releases
+# (e.g., v0.1.0, v0.2.0, v0.3.0, etc.)
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.0" # Matches vMAJOR.MINOR.0 (new stage releases)
+
+permissions:
+  contents: write
+
+jobs:
+  # Create GitHub Release
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+      version: ${{ steps.get_version.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Extract stage number
+        id: get_stage
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          MINOR=$(echo $VERSION | cut -d. -f2)
+          echo "stage=$MINOR" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Stage ${{ steps.get_stage.outputs.stage }} Release - v${{ steps.get_version.outputs.version }}
+          body: |
+            # Terminal Pong - Stage ${{ steps.get_stage.outputs.stage }} Release
+
+            ## Version ${{ steps.get_version.outputs.version }}
+
+            This release marks the completion of Stage ${{ steps.get_stage.outputs.stage }} of the Terminal Pong development.
+
+            ### Stage Highlights
+            - See [README.md](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/README.md) for full stage details
+
+            ### Installation
+
+            Download the appropriate binary for your platform below and make it executable:
+
+            ```bash
+            # Linux x86_64
+            chmod +x pong_term-linux-x86_64
+            ./pong_term-linux-x86_64
+
+            # Linux ARM64
+            chmod +x pong_term-linux-aarch64
+            ./pong_term-linux-aarch64
+
+            # macOS Intel
+            chmod +x pong_term-macos-x86_64
+            ./pong_term-macos-x86_64
+
+            # macOS Apple Silicon
+            chmod +x pong_term-macos-aarch64
+            ./pong_term-macos-aarch64
+            ```
+
+            ### Building from Source
+
+            ```bash
+            git clone https://github.com/${{ github.repository }}.git
+            cd pong_term
+            cargo build --release
+            ```
+
+            ### System Requirements
+            - Terminal with ANSI escape code support
+            - Minimum 80×24 character display
+
+            ---
+            *Built with ❤️ in Rust | Zero Dependencies | Pure Terminal Graphics*
+          draft: false
+          prerelease: false
+
+  # Build and upload Linux x86_64 binary
+  build-linux-x86_64:
+    name: Build Linux x86_64
+    needs: create-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Build release binary
+        run: |
+          cargo build --release --target x86_64-unknown-linux-gnu
+          mv target/x86_64-unknown-linux-gnu/release/pong_term pong_term-linux-x86_64
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./pong_term-linux-x86_64
+          asset_name: pong_term-linux-x86_64
+          asset_content_type: application/octet-stream
+
+  # Build and upload Linux ARM64 binary
+  build-linux-aarch64:
+    name: Build Linux ARM64
+    needs: create-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-unknown-linux-gnu
+
+      - name: Install cross-compilation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-aarch64-linux-gnu
+
+      - name: Build release binary
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+        run: |
+          cargo build --release --target aarch64-unknown-linux-gnu
+          mv target/aarch64-unknown-linux-gnu/release/pong_term pong_term-linux-aarch64
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./pong_term-linux-aarch64
+          asset_name: pong_term-linux-aarch64
+          asset_content_type: application/octet-stream
+
+  # Build and upload macOS x86_64 binary
+  build-macos-x86_64:
+    name: Build macOS x86_64
+    needs: create-release
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-apple-darwin
+
+      - name: Build release binary
+        run: |
+          cargo build --release --target x86_64-apple-darwin
+          mv target/x86_64-apple-darwin/release/pong_term pong_term-macos-x86_64
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./pong_term-macos-x86_64
+          asset_name: pong_term-macos-x86_64
+          asset_content_type: application/octet-stream
+
+  # Build and upload macOS ARM64 binary
+  build-macos-aarch64:
+    name: Build macOS ARM64
+    needs: create-release
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+
+      - name: Build release binary
+        run: |
+          cargo build --release --target aarch64-apple-darwin
+          mv target/aarch64-apple-darwin/release/pong_term pong_term-macos-aarch64
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./pong_term-macos-aarch64
+          asset_name: pong_term-macos-aarch64
+          asset_content_type: application/octet-stream
+
+  # Build and upload Windows x86_64 binary
+  build-windows-x86_64:
+    name: Build Windows x86_64
+    needs: create-release
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: Build release binary
+        run: |
+          cargo build --release --target x86_64-pc-windows-msvc
+          move target\x86_64-pc-windows-msvc\release\pong_term.exe pong_term-windows-x86_64.exe
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.upload_url }}
+          asset_path: ./pong_term-windows-x86_64.exe
+          asset_name: pong_term-windows-x86_64.exe
+          asset_content_type: application/octet-stream

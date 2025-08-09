@@ -16,4 +16,5 @@ categories = ["games", "command-line-utilities"]
 # - PATCH: Bug fixes and minor improvements within a stage
 
 [dependencies]
-# Zero dependencies - using only Rust standard library
+# Using crossterm for cross-platform terminal handling with momentum-based input
+crossterm = "0.28"

@@ -10,7 +10,7 @@ A production-ready terminal-based multiplayer Pong game written in pure Rust wit
 
 ## 🎮 Game Features
 
-### ✅ Current Implementation (Stage 4: Advanced Ball Physics)
+### ✅ Current Implementation (Stage 4: Enhanced Input & Physics)
 
 <details>
 <summary><b>Stage 1: Foundation</b> ✅</summary>
@@ -44,7 +44,7 @@ A production-ready terminal-based multiplayer Pong game written in pure Rust wit
 </details>
 
 <details open>
-<summary><b>Stage 4: Advanced Ball Physics</b> ✅</summary>
+<summary><b>Stage 4: Enhanced Input & Physics</b> ✅</summary>
 
 #### 🎯 Physics System
 
@@ -68,9 +68,17 @@ A production-ready terminal-based multiplayer Pong game written in pure Rust wit
   - Wall bouncing with vertical velocity reversal
   - Paddle collision with zone-based angle calculation
   - Goal detection with automatic ball reset
-- **Frame-based Animation**
-  - Predictable, smooth ball movement
-  - Frame counter for precise speed control
+
+#### ⚡ Enhanced Input System
+
+- **Momentum-based Input**
+  - Frame-independent paddle movement
+  - Smooth, consistent controls at any frame rate
+  - Accumulates input between frames for responsiveness
+- **Terminal State Management**
+  - Unified GameSession for clean state handling
+  - Proper alternate screen and raw mode management
+  - Consolidated rendering pipeline with zero duplication
   </details>
 
 ### 📋 Planned Features
@@ -87,7 +95,7 @@ A production-ready terminal-based multiplayer Pong game written in pure Rust wit
 
 ### Download Pre-built Binaries
 
-Download the latest release from the [Releases](https://github.com/asyed94/battle-of-the-rustaceans/releases) page.
+Download the latest release from the [Releases](https://github.com/asyed94/pong-term/releases) page.
 
 | Platform | Architecture  | Binary                         |
 | -------- | ------------- | ------------------------------ |
@@ -179,16 +187,17 @@ cargo test model::tests
 
 ### Module Structure
 
-| Module          | File                 | Purpose                                    |
-| --------------- | -------------------- | ------------------------------------------ |
-| **Model**       | `src/model.rs`       | Game state, physics, collision detection   |
-| **FrameBuffer** | `src/framebuffer.rs` | 2D character grid for rendering            |
-| **Draw**        | `src/draw.rs`        | Pure functions: model → framebuffer        |
-| **Render**      | `src/render.rs`      | ANSI terminal output, synchronized updates |
-| **Terminal**    | `src/terminal.rs`    | Terminal setup, capability detection       |
-| **Input**       | `src/input.rs`       | Raw mode input, event handling             |
-| **Game Loop**   | `src/game_loop.rs`   | Fixed timestep loop, frame limiting        |
-| **Main**        | `src/main.rs`        | Entry point, initialization                |
+| Module          | File                  | Purpose                                         |
+| --------------- | --------------------- | ----------------------------------------------- |
+| **Model**       | `src/model.rs`        | Game state, physics, collision detection        |
+| **FrameBuffer** | `src/framebuffer.rs`  | 2D character grid for rendering                 |
+| **Draw**        | `src/draw.rs`         | Pure functions: model → framebuffer             |
+| **Render**      | `src/render.rs`       | ANSI terminal output, synchronized updates      |
+| **Terminal**    | `src/terminal.rs`     | Terminal setup, capability detection            |
+| **Input**       | `src/input.rs`        | Momentum-based input, frame-independent control |
+| **Game Loop**   | `src/game_loop.rs`    | Fixed timestep loop, frame limiting             |
+| **GameSession** | `src/game_session.rs` | Terminal state management, unified rendering    |
+| **Main**        | `src/main.rs`         | Entry point, initialization                     |
 
 ## 📊 Data Model
 
@@ -300,13 +309,13 @@ RUST_BACKTRACE=1 cargo test
 
 ## ⚡ Performance
 
-| Metric             | Value                | Description               |
-| ------------------ | -------------------- | ------------------------- |
-| **Frame Rate**     | 60 FPS               | Fixed timestep game loop  |
-| **Input Latency**  | <16ms                | Sub-frame response time   |
-| **Rendering Mode** | Conditional          | 0 FPS idle, 60 FPS active |
-| **Memory Usage**   | ~1MB                 | Minimal heap allocation   |
-| **CPU Usage**      | <1% idle, <2% active | Efficient game loop       |
+| Metric             | Value                | Description                        |
+| ------------------ | -------------------- | ---------------------------------- |
+| **Frame Rate**     | 60 FPS               | Fixed timestep game loop           |
+| **Input Latency**  | Frame-independent    | Momentum-based, no input loss      |
+| **Rendering Mode** | Unified pipeline     | Zero duplication, optimized output |
+| **Memory Usage**   | ~1MB                 | Minimal heap allocation            |
+| **CPU Usage**      | <1% idle, <2% active | Efficient game loop                |
 
 ## 🔧 Development
 
@@ -326,8 +335,10 @@ pong_term/
 │   ├── 📄 draw.rs        # Drawing functions
 │   ├── 📄 render.rs      # Terminal output
 │   ├── 📄 terminal.rs    # Terminal utilities
-│   ├── 📄 input.rs       # Input handling
-│   └── 📄 game_loop.rs   # Main game loop
+│   ├── 📄 input.rs       # Momentum-based input
+│   ├── 📄 game_session.rs# Terminal state management
+│   ├── 📄 game_loop.rs   # Main game loop
+│   └── 📄 util.rs        # Utility functions
 ├── 📁 target/            # Build artifacts
 └── 📁 tests/             # Integration tests
 ```
@@ -412,7 +423,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] **Stage 1**: Basic structure and rendering
 - [x] **Stage 2**: Framebuffer system
 - [x] **Stage 3**: Input and game loop
-- [x] **Stage 4**: Ball physics with paddle zones
+- [x] **Stage 4**: Enhanced input system & ball physics
 - [ ] **Stage 5**: Score tracking and display
 - [ ] **Stage 6**: Local multiplayer
 - [ ] **Stage 7**: Network protocol
@@ -421,13 +432,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📌 Version History
 
-| Version   | Stage | Description                    | Release Date |
-| --------- | ----- | ------------------------------ | ------------ |
-| **0.4.1** | 4     | Advanced Ball Physics (0 deps) | Current      |
-| 0.4.0     | 4     | Advanced Ball Physics          | -            |
-| 0.3.0     | 3     | Interactive Gameplay           | -            |
-| 0.2.0     | 2     | Rendering System               | -            |
-| 0.1.0     | 1     | Foundation                     | -            |
+| Version   | Stage | Description              | Release Date |
+| --------- | ----- | ------------------------ | ------------ |
+| **0.4.1** | 4     | Enhanced Input & Physics | Current      |
+| 0.4.0     | 4     | Advanced Ball Physics    | -            |
+| 0.3.0     | 3     | Interactive Gameplay     | -            |
+| 0.2.0     | 2     | Rendering System         | -            |
+| 0.1.0     | 1     | Foundation               | -            |
 
 ### Semantic Versioning
 
@@ -480,7 +491,7 @@ When a stage is completed:
 
 **Current Version**: `0.4.1`  
 **Current Stage**: Stage 4 Complete ✅  
-**Ball Physics**: Advanced 5-zone paddle system with speed control  
+**Key Features**: Momentum-based input, unified rendering, 5-zone paddle physics  
 **Zero Dependencies**: True zero-dependency implementation achieved ✅  
 **Next Up**: Stage 5 - Score tracking and game state management
 

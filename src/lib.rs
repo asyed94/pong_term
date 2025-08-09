@@ -8,11 +8,13 @@
 //! - terminal: terminal utilities and capability detection
 //! - input: raw mode terminal input handling
 //! - game_loop: main game loop with fixed frame rate
+//! - game_session: unified terminal session management
 //! - util: utility functions (char/string width calculations)
 
 pub mod draw;
 pub mod framebuffer;
 pub mod game_loop;
+pub mod game_session;
 pub mod input;
 pub mod model;
 pub mod render;
@@ -22,10 +24,8 @@ pub mod util;
 pub use draw::draw_board_with_message;
 pub use framebuffer::FrameBuffer;
 pub use game_loop::run_game_loop;
-pub use input::{wait_for_enter_no_echo, InputEvent, Terminal};
+pub use game_session::GameSession;
+pub use input::{wait_for_enter_no_echo, InputState};
 pub use model::{Ball, BallEvent, Board, Paddle, HEIGHT, PADDLE_HEIGHT, WIDTH};
-pub use render::{
-    enter_alternate_screen, exit_alternate_screen, render_and_print, render_synchronized,
-    render_to_string, render_with_message_and_print, render_with_message_to_string, show_cursor,
-};
+pub use render::{render_to_string, render_with_message_to_string};
 pub use terminal::{print_setup_instructions, RenderStyle};

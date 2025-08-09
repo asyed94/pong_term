@@ -1,6 +1,6 @@
 # 🏓 Terminal Pong
 
-A production-ready terminal-based multiplayer Pong game written in pure Rust with **zero external dependencies**.
+A production-ready terminal-based multiplayer Pong game written in pure Rust.
 
 ![Version](https://img.shields.io/badge/version-0.4.1-blue)
 ![Rust](https://img.shields.io/badge/rust-%23000000.svg?style=flat&logo=rust&logoColor=white)
@@ -362,21 +362,12 @@ cargo fmt
 cargo clippy
 ```
 
-## 🚫 Zero Dependencies Philosophy
+## 🚫 Low Dependency Philosophy
 
-This project is built with **absolutely zero external dependencies**:
+This project is built with **minimal external dependencies**:
 
 - ✅ **No game engines** - Pure Rust implementation
-- ✅ **No terminal libraries** - Direct ANSI escape codes
 - ✅ **No async runtime** - Synchronous game loop
-- ✅ **No external crates** - Standard library only
-
-### Implementation Techniques
-
-- **Terminal Control**: Direct syscalls via inline assembly
-- **Input Handling**: Raw mode using termios ioctls
-- **Rendering**: ANSI escape sequences
-- **Timing**: Standard library's `Instant` and `Duration`
 
 ## 🖥️ System Requirements
 

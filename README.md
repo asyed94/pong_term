@@ -483,9 +483,8 @@ When a stage is completed:
 **Current Version**: `0.4.1`  
 **Current Stage**: Stage 4 Complete ✅  
 **Key Features**: Momentum-based input, unified rendering, 5-zone paddle physics  
-**Zero Dependencies**: True zero-dependency implementation achieved ✅  
 **Next Up**: Stage 5 - Score tracking and game state management
 
 ---
 
-_Built with ❤️ in Rust | Zero Dependencies | Pure Terminal Graphics_
+_Built with ❤️ in Rust | Pure Terminal Graphics_

@@ -209,7 +209,7 @@ impl Board {
         }
 
         // 3. Check for goals
-        if self.ball.x <= 0 {
+        if self.ball.x == 0 {
             // Left goal - right player scores
             self.ball.reset(self.width, self.height, true); // Ball goes left
             self.frame_counter = 0; // Reset frame counter
@@ -228,17 +228,19 @@ impl Board {
     /// Check if ball collides with either paddle and return hit location.
     fn check_paddle_collision_with_angle(&self) -> Option<PaddleHitLocation> {
         // Left paddle collision
-        if self.ball.x == self.left.x {
-            if self.ball.y >= self.left.y && self.ball.y < self.left.y + self.left.height {
-                return Some(self.get_paddle_hit_location(&self.left));
-            }
+        if self.ball.x == self.left.x
+            && self.ball.y >= self.left.y
+            && self.ball.y < self.left.y + self.left.height
+        {
+            return Some(self.get_paddle_hit_location(&self.left));
         }
 
         // Right paddle collision
-        if self.ball.x == self.right.x {
-            if self.ball.y >= self.right.y && self.ball.y < self.right.y + self.right.height {
-                return Some(self.get_paddle_hit_location(&self.right));
-            }
+        if self.ball.x == self.right.x
+            && self.ball.y >= self.right.y
+            && self.ball.y < self.right.y + self.right.height
+        {
+            return Some(self.get_paddle_hit_location(&self.right));
         }
 
         None

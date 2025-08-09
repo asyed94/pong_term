@@ -54,11 +54,7 @@ impl GameSession {
 
     /// Strip trailing newline if present
     fn strip_trailing_newline<'a>(&self, content: &'a str) -> &'a str {
-        if content.ends_with("\r\n") {
-            &content[..content.len() - 2]
-        } else {
-            content
-        }
+        content.strip_suffix("\r\n").unwrap_or(content)
     }
 
     /// Write content with optional synchronized output

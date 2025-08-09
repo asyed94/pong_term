@@ -111,7 +111,7 @@ impl MomentumTracker {
 // Thread-local momentum tracker for safe access
 thread_local! {
     static MOMENTUM: RefCell<MomentumTracker> = RefCell::new(MomentumTracker::new());
-    static LAST_PAUSE_STATE: RefCell<bool> = RefCell::new(false);
+    static LAST_PAUSE_STATE: RefCell<bool> = const { RefCell::new(false) };
 }
 
 /// Initialize the momentum tracker for smooth input handling.

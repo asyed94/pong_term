@@ -1,5 +1,5 @@
 //! FrameBuffer: a simple 2D character buffer for building frames (no ANSI).
-//! - Storage: Vec<char>, row-major (index = y * width + x)
+//! - Storage: `Vec<char>`, row-major (index = y * width + x)
 //! - OOB writes/reads are ignored (clipped); invariants guarded with debug_asserts.
 
 #[derive(Debug, Clone, PartialEq, Eq)]

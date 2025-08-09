@@ -37,8 +37,7 @@ pub fn print_setup_instructions(required_width: usize, required_height: usize) -
     writeln!(stdout)?;
     writeln!(
         stdout,
-        "Recommended terminal size: {}×{} or larger",
-        required_width, required_height
+        "Recommended terminal size: {required_width}×{required_height} or larger"
     )?;
     writeln!(stdout)?;
     writeln!(stdout, "The game board will be displayed below.")?;

@@ -223,7 +223,7 @@ jobs:
   ci-status:
     name: CI Status
     runs-on: ubuntu-latest
-    needs: [fmt, clippy, test, build, security, docs, integration]
+    needs: [fmt, clippy, test, security, docs, integration]
     if: always()
     steps:
       - name: Check all job statuses

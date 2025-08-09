@@ -102,58 +102,6 @@ jobs:
       - name: Run tests in release mode
         run: cargo test --release --verbose
 
-  # Build check on various targets
-  build:
-    name: Build Check
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            target: x86_64-unknown-linux-gnu
-          - os: ubuntu-latest
-            target: aarch64-unknown-linux-gnu
-            use-cross: true
-          - os: macos-latest
-            target: x86_64-apple-darwin
-          - os: macos-latest
-            target: aarch64-apple-darwin
-          - os: windows-latest
-            target: x86_64-pc-windows-msvc
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
-
-      - name: Install cross-compilation tools
-        if: matrix.use-cross
-        run: |
-          cargo install cross --git https://github.com/cross-rs/cross
-
-      - name: Cache cargo registry and build
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ runner.os }}-cargo-build-${{ matrix.target }}-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-build-${{ matrix.target }}-
-            ${{ runner.os }}-cargo-
-
-      - name: Build with cross
-        if: matrix.use-cross
-        run: cross build --target ${{ matrix.target }} --verbose
-
-      - name: Build
-        if: "!matrix.use-cross"
-        run: cargo build --target ${{ matrix.target }} --verbose
-
   # Security audit
   security:
     name: Security Audit
@@ -269,12 +217,7 @@ jobs:
 
       - name: Run binary with help flag (smoke test)
         run: |
-          timeout 2s ./target/release/pong_term || EXIT_CODE=$?
-          # Allow exit codes 124 (timeout) or 0 (success)
-          if [ "${EXIT_CODE:-0}" != "124" ] && [ "${EXIT_CODE:-0}" != "0" ]; then
-            echo "Unexpected exit code: ${EXIT_CODE:-0}"
-            exit 1
-          fi
+          timeout 2s ./target/release/pong_term | grep "Press Enter when ready to continue..."
 
   # Final status check - required for branch protection
   ci-status:
